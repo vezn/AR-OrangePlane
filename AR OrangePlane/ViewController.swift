@@ -17,6 +17,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Освещение сцены
+        
+        sceneView.autoenablesDefaultLighting = true
+        
         // Set the view's delegate
         sceneView.delegate = self
         
@@ -24,11 +28,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.showsStatistics = true
         
         // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        let scene = SCNScene()
+        
+        if  let campus = loadCampus() {
+                scene.rootNode.addChildNode(campus)
+        }
+        
+    
         
         // Set the scene to the view
         sceneView.scene = scene
     }
+    
+    func loadCampus() -> SCNNode? {
+        guard let scene = SCNScene(named: "art.scnassets/Campus.scn") else {return nil}
+        
+        let node = scene.rootNode.clone()
+        
+        return node
+    }
+    
+    // let scene = SCNScene(named: "art.scnassets/ship.scn")
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
