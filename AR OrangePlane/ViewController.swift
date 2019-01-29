@@ -34,7 +34,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 scene.rootNode.addChildNode(campus)
         }
         
-    
+        let programmaticCampus = loadProgramamticCampus()
+        scene.rootNode.addChildNode(programmaticCampus)
         
         // Set the scene to the view
         sceneView.scene = scene
@@ -46,6 +47,101 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let node = scene.rootNode.clone()
         
         return node
+    }
+    
+    func loadProgramamticCampus() -> SCNNode {
+        let campusNode = SCNNode()
+        
+        let buildingNode = loadBuilding()
+       
+        let treeNode = loadTree()
+        
+        campusNode.runAction(
+            .repeatForever(
+                .rotateBy(x: 0, y: -.pi, z: 0, duration: 2)))
+        
+        buildingNode.position.z -= 3
+        campusNode.addChildNode(buildingNode)
+        
+        campusNode.addChildNode(treeNode)
+        
+        return campusNode
+    }
+    
+    func loadBuilding() -> SCNNode {
+        let buildingNode = SCNNode()
+        
+        let boxNode = SCNNode(geometry: SCNBox(width: 3, height: 2, length: 1, chamferRadius: 0))
+        boxNode.position.y = 1
+        
+       // let building = SCNBox(width: 3, height: 1, length: 1, chamferRadius: 0)
+        
+        
+       /* var materials = [SCNMaterial]()
+        
+        [UIColor.red, .orange, .yellow, .blue, .gray, .purple].forEach { color in
+            let material = SCNMaterial()
+            
+             material.diffuse.contents = color
+             materials.append(material)
+        }
+      
+        building.materials = materials */
+        boxNode.geometry?.firstMaterial?.diffuse.contents = UIColor.brown
+        
+      // boxNode.geometry = building
+        
+        buildingNode.addChildNode(boxNode)
+        
+        
+        let grassNode = SCNNode(geometry: SCNPlane(width: 6, height: 2))
+        
+        grassNode.eulerAngles.x -= .pi/2
+        
+        grassNode.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+        
+        buildingNode.addChildNode(grassNode)
+        
+        return buildingNode
+    }
+    
+    func loadTree() -> SCNNode {
+        let treeNode = SCNNode()
+        
+        let sphereNode = SCNNode(geometry: SCNSphere(radius: 1))
+        sphereNode.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+        treeNode.addChildNode(sphereNode)
+        
+        sphereNode.position.y = 2.776
+        
+        let cylinderNode = SCNNode(geometry: SCNCylinder(radius: 0.1, height: 2))
+        cylinderNode.geometry?.firstMaterial?.diffuse.contents = UIColor.brown
+        treeNode.addChildNode(cylinderNode)
+        
+        cylinderNode.position.y = 1
+        
+        
+        treeNode.position = SCNVector3( -2.5,  0, -3)
+        
+        let treeNodeLeft1 = treeNode.clone()
+        treeNodeLeft1.position = SCNVector3( 5,  0, -0.75)
+        let treeNodeRight2 = treeNode.clone()
+        treeNodeRight2.position = SCNVector3( 0,  0, -0.75)
+        let treeNodeLeft2 = treeNode.clone()
+        treeNodeLeft2.position = SCNVector3( 5,  0, 0.75)
+        let treeNodeRight3 = treeNode.clone()
+        treeNodeRight3.position = SCNVector3( 0,  0, 0.75)
+        let treeNodeLeft3 = treeNode.clone()
+        treeNodeLeft3.position = SCNVector3( 5,  0, 0)
+        
+        treeNode.addChildNode(treeNodeLeft1)
+        treeNode.addChildNode(treeNodeRight2)
+        treeNode.addChildNode(treeNodeLeft2)
+        treeNode.addChildNode(treeNodeRight3)
+        treeNode.addChildNode(treeNodeLeft3)
+     
+        
+        return treeNode
     }
     
     // let scene = SCNScene(named: "art.scnassets/ship.scn")
